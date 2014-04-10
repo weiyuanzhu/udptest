@@ -44,7 +44,7 @@ public class UDPServer implements Runnable{
 			{
 				try {
 					udpSocket.receive(udpPacket);
-					String result = new String(udpPacket.getData());
+					String result = new String(udpPacket.getData(),udpPacket.getOffset(),udpPacket.getLength());
 					
 					System.out.println("Message received------------->" + result );
 					

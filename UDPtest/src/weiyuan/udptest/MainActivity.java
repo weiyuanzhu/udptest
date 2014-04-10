@@ -27,7 +27,8 @@ public class MainActivity extends Activity {
 	{
 		
 		System.out.println("send udp package");
-		final UDPClient client = new UDPClient("UDP Test");
+		String str = "FIND";
+		final UDPClient client = new UDPClient(str);
 		
 		Thread t = new Thread(){
 			public void run(){
