@@ -1,7 +1,7 @@
 package weiyuan.udptest;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
+import java.util.concurrent.*;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 
+	private UDPClient udpClient = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -28,16 +30,22 @@ public class MainActivity extends Activity {
 		
 		System.out.println("send udp package");
 		String str = "FIND";
-		final UDPClient client = new UDPClient(str);
+		udpClient = new UDPClient(str);
 		
-		Thread t = new Thread(){
-			public void run(){
-				
-				client.send();
-			}
-			
-		};
-		t.start();
+		ExecutorService exec = Executors.newCachedThreadPool();
+		exec.execute(udpClient);
+		exec.shutdown();
+		
+		
+		
+//		Thread t = new Thread(){
+//			public void run(){
+//				
+//				client.send();
+//			}
+//			
+//		};
+//		t.start();
 	}
 	
 	public void openServer(View view)
@@ -50,8 +58,23 @@ public class MainActivity extends Activity {
 		
 	}
 	
-
-	
+	public void printPanelList(View view)
+	{
+		List<int[]> panelList = udpClient.getPanelList();
+		for(int i=0; i<panelList.size();i++)
+		{
+			System.out.print("\n");
+			int[] list =  panelList.get(i);
+			for(int j=0; j<list.length;j++)
+			{
+				
+				System.out.print(list[j] + " ");
+				
+			}
+			
+		}
+		
+	}
 	
 	
 

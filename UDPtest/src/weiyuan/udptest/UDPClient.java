@@ -6,10 +6,15 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UDPClient {
+public class UDPClient implements Runnable{
 
+	private List<int[]> panelList;
+	
 	private static final int SERVER_PORT = 1460;
+	private static final int LISTEN_PORT = 5001;
 	
 	private DatagramSocket udpSocket = null;
 	private DatagramPacket udpPacket = null; 
@@ -20,15 +25,18 @@ public class UDPClient {
 	public UDPClient(String msg)
 	{
 		super();
+		panelList = new ArrayList<int[]>();
 		this.msg = msg;
 	}
 	
-	public int send()
+
+	public void run()
 	{
 		try {
 			InetAddress address = InetAddress.getByName("255.255.255.255");
 			
-			udpSocket = new DatagramSocket();
+			
+			udpSocket = new DatagramSocket(LISTEN_PORT);
 			
 			int msg_len = msg == null? 0 : msg.length();
 			
@@ -51,12 +59,29 @@ public class UDPClient {
 				public void run() {
 
 					System.out.println("---------------receiving udp packages------------");
+					byte[] buf = new byte[1024];
+					udpPacket = new DatagramPacket(buf, buf.length);
 					while(isListen)
 					{
 						try {
 							udpSocket.receive(udpPacket);
-							String result = new String(udpPacket.getData(),udpPacket.getOffset(),udpPacket.getLength());
-							System.out.println(result);
+							int[] buffer = new int[buf.length];
+							int i = 0;
+							for(byte b : udpPacket.getData()) {
+								int a = b & 0xFF;
+								buffer[i] = a;
+								
+								i++;
+							}
+							
+							/*for(int j =0; j<buffer.length;j++)
+							{
+								System.out.print(buffer[j] + " ");
+								
+							}*/
+							
+							panelList.add(buffer);
+							
 							
 					
 						} catch (IOException e) {
@@ -76,11 +101,7 @@ public class UDPClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
-		return 0;
-	}
+	}	
 
 	public boolean isListen() {
 		return isListen;
@@ -90,5 +111,8 @@ public class UDPClient {
 		this.isListen = isListen;
 	}
 	
+	public List<int[]> getPanelList() {
+		return panelList;
+	}
 	
 }

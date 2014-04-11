@@ -3,6 +3,7 @@ package weiyuan.udptest;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
@@ -12,7 +13,8 @@ import java.net.SocketException;
  */
 public class UDPServer implements Runnable{
 
-	private static final int PORT = 6000;
+	private static final int LISTEN_PORT = 6000;
+	private static final int CLIENT_PORT = 6001;
 	
 	private byte[] msg = new byte[1024];
 	
@@ -39,15 +41,18 @@ public class UDPServer implements Runnable{
 		DatagramPacket udpPacket = new DatagramPacket(msg,msg.length);
 		
 		try {
-			udpSocket = new DatagramSocket(PORT);
+			udpSocket = new DatagramSocket(LISTEN_PORT);
 			while (live)
 			{
 				try {
+					InetAddress address = InetAddress.getByName("localhost");
 					udpSocket.receive(udpPacket);
 					String result = new String(udpPacket.getData(),udpPacket.getOffset(),udpPacket.getLength());
 					
 					System.out.println("Message received------------->" + result );
+					udpPacket = new DatagramPacket(result.getBytes(),result.length(),address,CLIENT_PORT);
 					
+					udpSocket.send(udpPacket);
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
