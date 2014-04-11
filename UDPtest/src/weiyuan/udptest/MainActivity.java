@@ -76,6 +76,12 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	// ford and pull test
 	
+	public void pull()
+	{
+		//do something	
+		
+	}
 
 }
