@@ -45,7 +45,10 @@ public class UDPClient implements Runnable{
 			
 			
 			
-		} catch (UnknownHostException | SocketException e) {
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
