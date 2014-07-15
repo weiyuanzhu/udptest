@@ -73,6 +73,10 @@ public class UDPServer implements Runnable{
 		
 	}
 	
+	public void serverUpgrade(){
+		
+	}
+	
 
 	
 	
