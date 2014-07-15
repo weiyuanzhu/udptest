@@ -75,6 +75,7 @@ public class UDPServer implements Runnable{
 	
 	public void serverUpgrade(){
 		int test;
+		int test2;
 	}
 	
 
